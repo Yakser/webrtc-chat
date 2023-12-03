@@ -1,20 +1,23 @@
 'use client'
 
-import {ReactNode} from 'react';
+import {createContext, ReactNode, useEffect} from 'react';
 import {ConfigProvider, theme} from 'antd';
+import {io} from "socket.io-client";
+import {SocketContext} from "@/contexts/SocketContext";
 
+const socket = io('/', {path: '/api/socketio'});
 
 export function Providers({children}: { children: ReactNode }) {
+
     return (
         <ConfigProvider
             theme={{
                 algorithm: theme.darkAlgorithm,
-                token: {
-                    colorPrimary: '#1556ea',
-                }
             }}
         >
-            {children}
+            <SocketContext.Provider value={socket}>
+                {children}
+            </SocketContext.Provider>
         </ConfigProvider>
     );
 }
