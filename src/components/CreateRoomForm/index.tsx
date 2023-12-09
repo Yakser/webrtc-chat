@@ -1,7 +1,14 @@
 'use client';
 
-import React from "react";
-import {Button, Form, Input} from "antd";
+import React, {useContext} from "react";
+import {
+    Button,
+    Checkbox,
+    Flex,
+    Form,
+    Input,
+} from 'antd';
+import {UsersConnectionContext} from "@/contexts/UsersConnection";
 
 const onFinish = (values: any) => {
     console.log('Success:', values);
@@ -14,10 +21,16 @@ const onFinishFailed = (errorInfo: any) => {
 type FieldType = {
     roomName: string;
     roomId: string;
+    isPrivate: boolean;
+    invitedUsers: string[];
 };
 
 
 const JoinRoomForm = () => {
+    const [form] = Form.useForm();
+    const isPrivate = Form.useWatch('isPrivate', form);
+    const {users} = useContext(UsersConnectionContext);
+
     return (
         <Form
             name="createRoom"
@@ -28,6 +41,7 @@ const JoinRoomForm = () => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
+            form={form}
         >
             <Form.Item<FieldType>
                 label="Room ID"
@@ -43,6 +57,40 @@ const JoinRoomForm = () => {
             >
                 <Input/>
             </Form.Item>
+            <Form.Item<FieldType>
+                name="isPrivate"
+                valuePropName="checked"
+                wrapperCol={{offset: 8, span: 16}}
+            >
+                <Checkbox>Is private?</Checkbox>
+            </Form.Item>
+            {
+                isPrivate && (
+                    <Form.Item name="checkbox-group" label="Choose allowed users:">
+                        <Checkbox.Group>
+                            <Flex vertical>
+                                {
+                                    users && users.map((item, index) => (
+                                        <Checkbox key={index} value={{item}} style={{lineHeight: '32px'}}>
+                                            {{item}}
+                                        </Checkbox>
+                                    ))
+                                }
+
+                                <Checkbox value="b" style={{lineHeight: '32px'}}>
+                                    A
+                                </Checkbox>
+                                <Checkbox value="c" style={{lineHeight: '32px'}}>
+                                    A
+                                </Checkbox>
+                                <Checkbox value="D" style={{lineHeight: '32px'}}>
+                                    A
+                                </Checkbox>
+                            </Flex>
+                        </Checkbox.Group>
+                    </Form.Item>
+                )
+            }
             <Form.Item wrapperCol={{offset: 8, span: 16}}>
                 <Button type="primary" htmlType="submit">
                     Create

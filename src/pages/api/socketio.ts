@@ -5,7 +5,6 @@ import { NextApiResponseServerIO } from '@/utils/types';
 import { SOCKET_PATH } from '@/utils/constants';
 
 export default async function handler (req: NextApiRequest, res: NextApiResponseServerIO) {
-    console.log(res);
     if (!res.socket.server.io) {
         console.log('Socket is initializing');
 
@@ -17,11 +16,6 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
             console.log('connected');
 
             socket.on('room:join', ({ room, userID }) => {
-                console.table({
-                    'room-id': room,
-                    'userID': userID,
-                });
-
                 socket.join(room);
                 socket.to(room).emit('user:joined', userID);
 

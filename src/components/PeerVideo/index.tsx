@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import style from './index.module.scss';
 
 const PeerVideo = ({
                        stream,
@@ -9,18 +10,18 @@ const PeerVideo = ({
     name: string;
     isMe?: boolean;
 }) => (
-    <div className="w-96">
+    <div className={style.video}>
         <video
             ref={(node) => {
                 if (node) node.srcObject = stream;
             }}
             autoPlay
             muted={isMe}
-            className="rounded-[12px] aspect-video object-cover -scale-x-100"
+            className=""
         />
 
         <p className="font-medium absolute bottom-3 left-4 text-xs">
-            <span className="text-white">{name}</span>
+            <span className="">{name}</span>
         </p>
     </div>
 );

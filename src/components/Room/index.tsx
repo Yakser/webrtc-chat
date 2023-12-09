@@ -1,41 +1,28 @@
 'use client';
 
-import { useContext, useEffect, useState } from 'react';
-import { MediaConnection } from 'peerjs';
-import { Kind, PeerId } from '@/utils/types';
+import React, { useContext, useEffect } from 'react';
 import Streams from "@/components/Streams";
-import {useMediaStream} from "@/utils/hooks";
 import {SocketContext} from "@/contexts/SocketContext";
-import usePeer from "@/utils/hooks/usePeer";
+import {usePeer} from "@/utils/hooks/usePeer";
 import UsersSettingsProvider from "@/contexts/UsersSettings";
 import UsersConnectionProvider from "@/contexts/UsersConnection";
+import Peer from "peerjs";
 
-const Room = ({ stream }: { stream: MediaStream }) => {
+type RoomProps = {
+    stream: MediaStream,
+    isPeerReady: boolean,
+    peer: Peer | null,
+    myId: string,
+}
+
+const Room: React.FC<RoomProps> = ({ stream, peer, isPeerReady, myId }) => {
     const socket = useContext(SocketContext);
-
-    const { muted, visible, toggle, toggleVideo } = useMediaStream(stream);
-    const { peer, myId, isPeerReady } = usePeer(stream);
-
-    const [modal, setModal] = useState<'hidden' | 'chat' | 'status' | 'close'>(
-        'hidden'
-    );
-    const [fullscreen, setFullscreen] = useState(false);
-
-    function replaceTrack(track: MediaStreamTrack) {
-        return (peer: MediaConnection) => {
-            const sender = peer.peerConnection
-                ?.getSenders()
-                .find((s) => s.track?.kind === track.kind);
-
-            sender?.replaceTrack(track);
-        };
-    }
-
+    
     useEffect(() => {
         return () => {
             socket?.disconnect();
         };
-    }, []);
+    }, [socket]);
 
 
     if (!isPeerReady) return <>Loading...</>;

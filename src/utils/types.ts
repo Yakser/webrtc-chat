@@ -59,10 +59,3 @@ export type UserMessage = {
 };
 
 export type Status = 'loading' | 'idle' | 'rejected' | 'success';
-export type Kind =
-    | 'audio'
-    | 'video'
-    | 'chat'
-    | 'users'
-    | 'screen'
-    | 'fullscreen';
