@@ -22,3 +22,7 @@ export type PeerId = string;
 export type Status = 'loading' | 'idle' | 'rejected' | 'success';
 
 export type Streams = Record<string, React.ReactNode>;
+export type User = {
+    id: string,
+    name: string,
+};

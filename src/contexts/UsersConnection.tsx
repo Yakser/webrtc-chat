@@ -118,8 +118,6 @@ export default function UsersConnectionProvider({
             if (!peerId) return;
             if (myId === peerId) router.push('/');
             else {
-                console.log('user left', peerId)
-                // delete streams[peerId];
                 setStreams(removeUserStream(peerId));
                 users[peerId]?.close();
             }

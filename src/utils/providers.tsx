@@ -6,6 +6,7 @@ import {io} from "socket.io-client";
 import {SocketContext} from "@/contexts/SocketContext";
 import {PeerContext} from "@/contexts/PeerContext";
 import Peer from "peerjs";
+import {UsersListContext, UsersListContextProvider} from "@/contexts/UsersListContext";
 
 const socket = io('/', {path: '/api/socketio'});
 
@@ -18,9 +19,7 @@ export function Providers({children}: { children: ReactNode }) {
         <ConfigProvider
             theme={{
                 algorithm: theme.darkAlgorithm,
-                components: {
-
-                }
+                components: {}
             }}
         >
             <SocketContext.Provider value={socket}>
@@ -32,7 +31,9 @@ export function Providers({children}: { children: ReactNode }) {
                     setIsPeerReady,
                     setMyId
                 }}>
-                    {children}
+                    <UsersListContextProvider>
+                        {children}
+                    </UsersListContextProvider>
                 </PeerContext.Provider>
             </SocketContext.Provider>
         </ConfigProvider>

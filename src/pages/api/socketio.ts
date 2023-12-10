@@ -1,7 +1,7 @@
 import { NextApiRequest } from 'next';
 import { Server as ServerIO } from 'socket.io';
 
-import { NextApiResponseServerIO } from '@/utils/types';
+import {NextApiResponseServerIO, User} from '@/utils/types';
 import { SOCKET_PATH } from '@/utils/constants';
 
 export default async function handler (req: NextApiRequest, res: NextApiResponseServerIO) {
@@ -29,6 +29,12 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
                     socket.to(roomId).emit('user:left', userId);
                 });
 
+            });
+
+            socket.on('user:connect', (user: User) => {
+                console.log('user connect', user);
+                socket.broadcast.emit('user:connected', user);
+                // socket.emit('user:connected', user)
             });
         });
     }

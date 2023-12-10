@@ -4,13 +4,15 @@ import {useContext, useEffect, useState} from 'react';
 
 import Peer from 'peerjs';
 
-import {Nullable, PeerId} from '@/utils/types';
+import {Nullable, PeerId, User} from '@/utils/types';
 import {SocketContext} from "@/contexts/SocketContext";
 import {PeerContext} from "@/contexts/PeerContext";
 import {getUsername} from "@/utils/helpers";
+import {log} from "util";
 
 export const usePeer = () => {
     const peerContext = useContext(PeerContext);
+    const socket = useContext(SocketContext);
     const [isLoading, setIsLoading] = useState(true);
     const [peer, setPeer] = useState<Nullable<Peer>>(null);
     const [myId, setMyId] = useState<PeerId>('');
@@ -29,6 +31,10 @@ export const usePeer = () => {
                     console.log('your device id: ', id);
                     setMyId(id);
                     peerContext.setMyId(id);
+                    socket?.emit('user:connect', {
+                        id,
+                        name: getUsername()
+                    });
                 });
 
                 peer.on('error', () => console.error('Failed to setup peer connection'));
@@ -36,7 +42,7 @@ export const usePeer = () => {
                 console.error(error);
             }
         })
-    }, []);
+    }, [peer, peerContext, socket]);
 
     return {
         peer: peerContext.peer || peer,
