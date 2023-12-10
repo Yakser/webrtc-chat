@@ -10,7 +10,7 @@ const PeerVideo = ({
     name: string;
     isMe?: boolean;
 }) => (
-    <div className={style.video}>
+    <div className={`${style.video} ${isMe ? style.video__my : ''}`}>
         <video
             ref={(node) => {
                 if (node) node.srcObject = stream;

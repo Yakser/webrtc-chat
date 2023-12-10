@@ -23,11 +23,10 @@ export default function UsersConnectionProvider({
     const {streams} = useContext(UsersStateContext);
     const {
         setStreams,
-        setNames,
     } = useContext(UsersUpdaterContext);
 
     const [users, setUsers] = useState<any>({});
-    const [connections, setConnections] = useState<any>({});
+    const [usernames, setUsernames] = useState<Record<string, string>>({});
 
     function leaveRoom(id: PeerId) {
         socket?.emit('user:leave', id);
@@ -47,7 +46,13 @@ export default function UsersConnectionProvider({
 
         socket?.on(
             'user:joined',
-            (userId: string) => {
+            ({userId, userName}: {userId: string, userName: string}) => {
+                console.table({
+                    'user-joined': 'user:joined',
+                    'peer': peer._id,
+                    'user-id': userId,
+                    'user-name': userName,
+                });
                 const call = peer.call(
                     userId,
                     stream,
@@ -62,9 +67,10 @@ export default function UsersConnectionProvider({
                 );
 
                 call.on('stream', (stream: MediaStream) => {
+                    console.log('on stream', userName, userId)
                     setStreams(
                         append({
-                            [userId]: <PeerVideo stream={stream} isMe={false} name={getUsername()}/>,
+                            [userId]: <PeerVideo stream={stream} isMe={false} name={userName}/>,
                         })
                     );
 
@@ -86,16 +92,14 @@ export default function UsersConnectionProvider({
             const {peer, metadata} = call;
             const {user} = metadata;
 
-            console.log(user);
-
             setUsers(append({[peer]: call}));
-
 
             call.answer(stream); // * answers incoming call with his/her stream
 
             console.table({
-                'answer-friend': 'answer friend',
-                'user-id': peer,
+                'peer.on call': 'peer.on call',
+                'peer': peer,
+                'user-id': user.id,
                 'user-name': user.name,
             });
 

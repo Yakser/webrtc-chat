@@ -16,7 +16,6 @@ type FieldType = {
 
 const JoinRoomForm = () => {
     const router = useRouter();
-    const {stream} = useMediaStream();
     const {myId} = usePeer();
     const [ form ] = Form.useForm();
 

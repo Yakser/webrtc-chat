@@ -7,6 +7,7 @@ import Room from "@/components/Room";
 import {Typography} from "antd";
 import {SocketContext} from "@/contexts/SocketContext";
 import {usePeer} from "@/utils/hooks/usePeer";
+import {getUsername} from "@/utils/helpers";
 
 type PageProps = {
     params: { roomId: string };
@@ -17,9 +18,16 @@ const Page: React.FC<PageProps> = ({params}: { params: { roomId: string } }) => 
     const {myId, peer, isPeerReady} = usePeer();
 
     useEffect(() => {
+        const username = getUsername();
+        console.log('room join', {
+            roomId: params.roomId,
+            userId: myId,
+            userName: username,
+        })
         socket?.emit('room:join', {
             roomId: params.roomId,
-            userID: myId,
+            userId: myId,
+            userName: username,
         });
     }, [myId, params.roomId, socket]);
 

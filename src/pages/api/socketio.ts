@@ -15,16 +15,18 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
         io.on('connection', (socket) => {
             console.log('connected');
 
-            socket.on('room:join', ({ room, userID }) => {
-                socket.join(room);
-                socket.to(room).emit('user:joined', userID);
+            socket.on('room:join', ({ roomId, userId, userName }) => {
+
+                console.log('room:join', roomId, userId, userName);
+                socket.join(roomId);
+                socket.to(roomId).emit('user:joined', {userId, userName});
 
                 socket.on('disconnect', () => {
-                    socket.to(room).emit('user:left', userID);
+                    socket.to(roomId).emit('user:left', userId);
                 });
 
-                socket.on('user:leave', (userID) => {
-                    socket.to(room).emit('user:left', userID);
+                socket.on('user:leave', (userId) => {
+                    socket.to(roomId).emit('user:left', userId);
                 });
 
             });

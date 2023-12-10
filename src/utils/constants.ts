@@ -9,5 +9,4 @@ export const enum Messages {
 
 export const enum LocalStorageKeys {
     USERNAME = 'username',
-    UUID = 'uuid',
 }

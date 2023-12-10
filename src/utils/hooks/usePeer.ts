@@ -2,28 +2,24 @@
 
 import {useContext, useEffect, useState} from 'react';
 
-import {useParams, usePathname, useRouter} from 'next/navigation';
 import Peer from 'peerjs';
 
-import {Nullable, PeerId, RoomId} from '@/utils/types';
+import {Nullable, PeerId} from '@/utils/types';
 import {SocketContext} from "@/contexts/SocketContext";
-import {LocalStorageKeys} from "@/utils/constants";
-import {loadWebpackHook} from "next/dist/server/config-utils";
-import {useMediaStream} from "@/utils/hooks/useMediaStream";
 import {PeerContext} from "@/contexts/PeerContext";
+import {getUsername} from "@/utils/helpers";
 
 export const usePeer = () => {
-    const socket = useContext(SocketContext);
     const peerContext = useContext(PeerContext);
     const [isLoading, setIsLoading] = useState(true);
     const [peer, setPeer] = useState<Nullable<Peer>>(null);
     const [myId, setMyId] = useState<PeerId>('');
 
     useEffect(() => {
-        (async function createPeer() {
-            if (peerContext.peer) return;
+        if (peer || peerContext.peer) return;
+        import("peerjs").then(({default: Peer}) => {
             try {
-                const peer = new (await import('peerjs')).default();
+                const peer = new Peer();
                 peerContext.setIsPeerReady(true);
                 peerContext.setPeer(peer);
                 setPeer(peer);
@@ -39,8 +35,8 @@ export const usePeer = () => {
             } catch (error) {
                 console.error(error);
             }
-        })();
-    }, [peerContext, socket]);
+        })
+    }, []);
 
     return {
         peer: peerContext.peer || peer,

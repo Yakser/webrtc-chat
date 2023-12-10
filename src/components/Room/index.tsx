@@ -29,31 +29,15 @@ const Room: React.FC<RoomProps> = ({ stream, peer, isPeerReady, myId }) => {
     if (!peer) return <>Peer error!</>;
 
     return (
-        <div className="flex">
+
             <UsersSettingsProvider>
-                <div className="sm:flex hidden flex-col p-4 w-full h-screen">
                     <UsersConnectionProvider stream={stream} myId={myId} peer={peer}>
-                        <div className="flex h-full place-items-center place-content-center gap-4">
                             <Streams
                                 stream={stream}
                             />
-                        </div>
-
-                        <div className="flex items-center">
-                            тут Control panel
-                            {/*<ControlPanel*/}
-                            {/*    visible={visible}*/}
-                            {/*    muted={muted}*/}
-                            {/*    chat={modal == 'chat'}*/}
-                            {/*    onToggle={toggleKind}*/}
-                            {/*    onLeave={() => router.push('/')}*/}
-                            {/*/>*/}
-                        </div>
                     </UsersConnectionProvider>
-                </div>
-
             </UsersSettingsProvider>
-        </div>
+
     );
 }
 
