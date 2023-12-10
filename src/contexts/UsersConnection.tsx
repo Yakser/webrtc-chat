@@ -7,7 +7,7 @@ import {useRouter} from 'next/navigation';
 import {UsersStateContext, UsersUpdaterContext} from "@/contexts/UsersSettings";
 import PeerVideo from "@/components/PeerVideo";
 import {SocketContext} from "@/contexts/SocketContext";
-import {append, getUsername} from "@/utils/helpers";
+import {append, getUsername, removeUserStream} from "@/utils/helpers";
 
 export const UsersConnectionContext = createContext<any>({});
 
@@ -26,8 +26,6 @@ export default function UsersConnectionProvider({
     } = useContext(UsersUpdaterContext);
 
     const [users, setUsers] = useState<any>({});
-    const [usernames, setUsernames] = useState<Record<string, string>>({});
-
     function leaveRoom(id: PeerId) {
         socket?.emit('user:leave', id);
         users[id].close();
@@ -117,11 +115,12 @@ export default function UsersConnectionProvider({
 
     useEffect(() => {
         socket?.on('user:left', (peerId: PeerId) => {
+            if (!peerId) return;
             if (myId === peerId) router.push('/');
             else {
                 console.log('user left', peerId)
-                delete streams[peerId];
-                setStreams(streams);
+                // delete streams[peerId];
+                setStreams(removeUserStream(peerId));
                 users[peerId]?.close();
             }
         });

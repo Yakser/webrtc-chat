@@ -18,6 +18,9 @@ export function Providers({children}: { children: ReactNode }) {
         <ConfigProvider
             theme={{
                 algorithm: theme.darkAlgorithm,
+                components: {
+
+                }
             }}
         >
             <SocketContext.Provider value={socket}>

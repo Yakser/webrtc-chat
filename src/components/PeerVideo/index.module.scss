@@ -1,7 +1,24 @@
-.video {
+@use '@/scss/utils/colors';
 
+.video {
+  max-width: 40rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .video__my {
-  border: .2rem solid red;
+
+}
+
+.video__videoElement {
+  width: 100%;
+  border-radius: 2rem;
+}
+
+.video__name {
+  text-align: center;
+  font-weight: 600;
+  font-size: 2rem;
 }

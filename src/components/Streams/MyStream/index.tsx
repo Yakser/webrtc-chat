@@ -5,10 +5,10 @@ import {MYSELF} from '@/utils/constants';
 import PeerVideo from "@/components/PeerVideo";
 import {UsersConnectionContext} from "@/contexts/UsersConnection";
 import VideoContainer from "@/components/VideoContainer";
+import {getUsername} from "@/utils/helpers";
 
 export default function MyStream({
-                                     stream,
-
+                                     stream
                                  }: {
     stream: MediaStream;
 }) {
@@ -19,7 +19,7 @@ export default function MyStream({
             id={myId}
             stream={stream}
         >
-            <PeerVideo stream={stream} name={MYSELF} isMe={true}/>
+            <PeerVideo stream={stream} name={getUsername()} isMe={true}/>
         </VideoContainer>
     );
 }

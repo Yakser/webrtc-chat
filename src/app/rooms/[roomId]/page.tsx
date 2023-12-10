@@ -34,10 +34,12 @@ const Page: React.FC<PageProps> = ({params}: { params: { roomId: string } }) => 
     if (isLoading) return <>{Messages.LOADER_STREAM_MSG}</>;
     if (!stream) return <>Error! {Messages.FAILURE}</>;
 
-    return (<>
-        <Typography.Title level={2}>Room {params.roomId}</Typography.Title>
-        <Room stream={stream} myId={myId} peer={peer}  isPeerReady={isPeerReady}/>
-    </>)
+    return (
+        <section>
+            <Typography.Title level={2}>Room {params.roomId}</Typography.Title>
+            <Room stream={stream} myId={myId} peer={peer} isPeerReady={isPeerReady}/>
+        </section>
+    )
 }
 
 export default Page;

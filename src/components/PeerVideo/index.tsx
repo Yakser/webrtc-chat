@@ -1,5 +1,6 @@
-import { memo } from 'react';
+import {memo} from 'react';
 import style from './index.module.scss';
+import {Typography} from 'antd';
 
 const PeerVideo = ({
                        stream,
@@ -17,12 +18,15 @@ const PeerVideo = ({
             }}
             autoPlay
             muted={isMe}
-            className=""
+            className={style.video__videoElement}
         />
-
-        <p className="font-medium absolute bottom-3 left-4 text-xs">
-            <span className="">{name}</span>
-        </p>
+        <Typography.Text className={style.video__name}>
+            {name} {
+                isMe && <Typography.Text className={style.video__name} type={'secondary'}>
+                    (You)
+                </Typography.Text>
+            }
+        </Typography.Text>
     </div>
 );
 

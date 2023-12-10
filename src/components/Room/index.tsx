@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext, useEffect } from 'react';
+import React, {useContext, useEffect} from 'react';
 import Streams from "@/components/Streams";
 import {SocketContext} from "@/contexts/SocketContext";
 import {usePeer} from "@/utils/hooks/usePeer";
@@ -15,10 +15,12 @@ type RoomProps = {
     myId: string,
 }
 
-const Room: React.FC<RoomProps> = ({ stream, peer, isPeerReady, myId }) => {
+const Room: React.FC<RoomProps> = ({stream, peer, isPeerReady, myId}) => {
     const socket = useContext(SocketContext);
-    
+
     useEffect(() => {
+        socket?.connect();
+
         return () => {
             socket?.disconnect();
         };
@@ -30,13 +32,13 @@ const Room: React.FC<RoomProps> = ({ stream, peer, isPeerReady, myId }) => {
 
     return (
 
-            <UsersSettingsProvider>
-                    <UsersConnectionProvider stream={stream} myId={myId} peer={peer}>
-                            <Streams
-                                stream={stream}
-                            />
-                    </UsersConnectionProvider>
-            </UsersSettingsProvider>
+        <UsersSettingsProvider>
+            <UsersConnectionProvider stream={stream} myId={myId} peer={peer}>
+                <Streams
+                    stream={stream}
+                />
+            </UsersConnectionProvider>
+        </UsersSettingsProvider>
 
     );
 }

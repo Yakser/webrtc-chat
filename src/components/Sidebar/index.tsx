@@ -6,7 +6,7 @@ import {
     VideoCameraOutlined,
     HomeOutlined,
 } from '@ant-design/icons';
-import {Layout, Menu} from 'antd';
+import {Layout, Menu, Typography} from 'antd';
 import Link from "next/link";
 
 const {Sider} = Layout;
@@ -18,7 +18,6 @@ type SidebarProps = {
 const Sidebar: React.FC<SidebarProps> = ({collapsed}) => {
     return (
         <Sider trigger={null} collapsible collapsed={collapsed}>
-            <div className="demo-logo-vertical"/>
             <Menu
                 theme="dark"
                 mode="inline"
