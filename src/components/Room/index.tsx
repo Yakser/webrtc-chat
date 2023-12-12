@@ -32,7 +32,7 @@ const Room: React.FC<RoomProps> = ({stream, peer, isPeerReady, myId}) => {
     return (
 
         <UsersSettingsProvider>
-            <UsersConnectionProvider stream={stream} myId={myId} peer={peer}>
+            <UsersConnectionProvider stream={stream} myId={myId}>
                 <Streams
                     stream={stream}
                 />
