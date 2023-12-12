@@ -3,11 +3,27 @@
 import React, {createContext, useState} from 'react';
 import {Streams} from "@/utils/types";
 
+export type UsersStateContextType = {
+    streams: Streams,
+}
 
-export const UsersUpdaterContext = createContext<any>({});
-export const UsersStateContext = createContext<any>({});
+export type UsersUpdaterContextType = {
+    setStreams: React.Dispatch<React.SetStateAction<Streams>>,
+}
 
-export default function UsersSettingsProvider({children}: any) {
+export const UsersUpdaterContext = createContext<UsersUpdaterContextType>({
+    setStreams: () => null,
+});
+
+
+export const UsersStateContext = createContext<UsersStateContextType>({
+    streams: {},
+});
+
+export type Props = {
+    children: React.ReactNode,
+}
+export const UsersSettingsProvider: React.FC<Props> = ({children}) => {
     const [streams, setStreams] = useState<Streams>({});
 
     return (

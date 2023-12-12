@@ -1,12 +1,11 @@
 'use client';
 
-import React, {useCallback, useContext, useEffect, useState} from "react";
+import React, {useCallback, useEffect} from "react";
 import {Button, Form, Input, Typography} from "antd";
 import {useRouter} from 'next/navigation';
 import {getUsername} from "@/utils/helpers";
 import {LocalStorageKeys} from "@/utils/constants";
 import {usePeer} from "@/utils/hooks/usePeer";
-import {useMediaStream} from "@/utils/hooks/useMediaStream";
 
 type FieldType = {
     username: string;
@@ -17,7 +16,7 @@ type FieldType = {
 const JoinRoomForm = () => {
     const router = useRouter();
     const {myId} = usePeer();
-    const [ form ] = Form.useForm();
+    const [form] = Form.useForm();
 
     const onFinish = useCallback(
         (values: FieldType) => {
@@ -31,10 +30,6 @@ const JoinRoomForm = () => {
         form.setFieldValue('username', getUsername());
     }, [form]);
 
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-    };
-
     return (
         <>
             <Typography.Title level={2}>
@@ -47,7 +42,6 @@ const JoinRoomForm = () => {
                 style={{maxWidth: 600}}
                 initialValues={{remember: true}}
                 onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
                 autoComplete="off"
                 form={form}
             >

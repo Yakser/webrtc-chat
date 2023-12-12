@@ -8,18 +8,7 @@ import {
     Form,
     Input,
 } from 'antd';
-import {UsersConnectionContext} from "@/contexts/UsersConnection";
-import {UsersStateContext} from "@/contexts/UsersSettings";
-import {usePeer} from "@/utils/hooks/usePeer";
 import {UsersListContext} from "@/contexts/UsersListContext";
-
-const onFinish = (values: any) => {
-    console.log('Success:', values);
-};
-
-const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-};
 
 type FieldType = {
     roomName: string;
@@ -29,10 +18,12 @@ type FieldType = {
 };
 
 
-const JoinRoomForm = () => {
+const CreateRoomForm = () => {
     const [form] = Form.useForm();
     const isPrivate = Form.useWatch('isPrivate', form);
+    // fixme: this is incorrect, we should save all connections, not users connected after us
     const users = useContext(UsersListContext);
+
     return (
         <>
             <Form
@@ -40,9 +31,6 @@ const JoinRoomForm = () => {
                 labelCol={{span: 8}}
                 wrapperCol={{span: 16}}
                 style={{maxWidth: 600}}
-                initialValues={{remember: true}}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
                 autoComplete="off"
                 form={form}
             >
@@ -94,4 +82,4 @@ const JoinRoomForm = () => {
     );
 };
 
-export default JoinRoomForm;
+export default CreateRoomForm;

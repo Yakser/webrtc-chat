@@ -2,15 +2,17 @@ import {memo} from 'react';
 import style from './index.module.scss';
 import {Typography} from 'antd';
 
+export type PeerVideoProps = {
+    stream: MediaStream;
+    name: string;
+    isMe?: boolean;
+}
+
 const PeerVideo = ({
                        stream,
                        name,
                        isMe,
-                   }: {
-    stream: MediaStream;
-    name: string;
-    isMe?: boolean;
-}) => (
+                   }: PeerVideoProps) => (
     <div className={`${style.video} ${isMe ? style.video__my : ''}`}>
         <video
             ref={(node) => {

@@ -1,7 +1,5 @@
 import {useContext} from 'react';
 
-import {MYSELF} from '@/utils/constants';
-
 import PeerVideo from "@/components/PeerVideo";
 import {UsersConnectionContext} from "@/contexts/UsersConnection";
 import VideoContainer from "@/components/VideoContainer";

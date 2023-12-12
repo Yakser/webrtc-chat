@@ -1,41 +1,54 @@
 'use client';
 
-import {createContext, useContext, useEffect, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 
-import {PeerId} from '@/utils/types';
+import {PeerId, Peers, Streams} from '@/utils/types';
 import {useRouter} from 'next/navigation';
 import {UsersStateContext, UsersUpdaterContext} from "@/contexts/UsersSettings";
 import PeerVideo from "@/components/PeerVideo";
 import {SocketContext} from "@/contexts/SocketContext";
 import {append, getUsername, removeUserStream} from "@/utils/helpers";
+import {MediaConnection} from "peerjs";
+import {usePeer} from "@/utils/hooks/usePeer";
 
-export const UsersConnectionContext = createContext<any>({});
+export type UsersConnectionContextType = {
+    myId: string,
+    users: Peers,
+    leaveRoom: (id: PeerId) => void,
+}
 
-export default function UsersConnectionProvider({
-                                                    stream,
-                                                    peer,
-                                                    myId,
-                                                    children,
-                                                }: any) {
+
+export const UsersConnectionContext = createContext<UsersConnectionContextType>({
+    myId: '',
+    users: {},
+    leaveRoom: () => null
+});
+
+type Props = {
+    stream: MediaStream
+    myId: string,
+    children: React.ReactNode,
+}
+export const UsersConnectionProvider: React.FC<Props> = ({
+                                                             stream,
+                                                             myId,
+                                                             children,
+                                                         }) => {
     const router = useRouter();
-
+    const {peer} = usePeer();
     const socket = useContext(SocketContext);
     const {streams} = useContext(UsersStateContext);
     const {
         setStreams,
     } = useContext(UsersUpdaterContext);
 
-    const [users, setUsers] = useState<any>({});
+    // fixme: rename to Peers(Calls) by userId
+    const [users, setUsers] = useState<Peers>({});
+
     function leaveRoom(id: PeerId) {
         socket?.emit('user:leave', id);
         users[id].close();
-        setStreams((s: any) => {
-            const obj: any = {};
-            for (const key in s) {
-                if (key != id) obj[id] = s[id];
-            }
-            return obj;
-        });
+        setStreams(removeUserStream(id));
     }
 
     // * user a accepts user b and make a call
@@ -44,10 +57,10 @@ export default function UsersConnectionProvider({
 
         socket?.on(
             'user:joined',
-            ({userId, userName}: {userId: string, userName: string}) => {
+            ({userId, userName}: { userId: string, userName: string }) => {
                 console.table({
                     'user-joined': 'user:joined',
-                    'peer': peer._id,
+                    'peer': peer.id,
                     'user-id': userId,
                     'user-name': userName,
                 });
@@ -65,15 +78,14 @@ export default function UsersConnectionProvider({
                 );
 
                 call.on('stream', (stream: MediaStream) => {
-                    console.log('on stream', userName, userId)
                     setStreams(
-                        append({
+                        append<Streams>({
                             [userId]: <PeerVideo stream={stream} isMe={false} name={userName}/>,
                         })
                     );
 
                 });
-                setUsers(append({[userId]: call}));
+                setUsers(append<Peers>({[userId]: call}));
             }
         );
 
@@ -86,11 +98,11 @@ export default function UsersConnectionProvider({
     useEffect(() => {
         if (!peer) return;
 
-        peer.on('call', (call: any) => {
+        peer.on('call', (call: MediaConnection) => {
             const {peer, metadata} = call;
             const {user} = metadata;
 
-            setUsers(append({[peer]: call}));
+            setUsers(append<Peers>({[peer]: call}));
 
             call.answer(stream); // * answers incoming call with his/her stream
 
@@ -103,13 +115,12 @@ export default function UsersConnectionProvider({
 
             call.on('stream', (stream: MediaStream) => {
                 setStreams(
-                    append({
+                    append<Streams>({
                         [peer]: <PeerVideo stream={stream} isMe={false} name={user.name}/>,
                     })
                 );
 
             }); // * receiver's stream
-            // call.on('close', () => toast(`${user.name} has left the room`));
         });
     }, [peer, setStreams, stream]);
 
@@ -130,7 +141,7 @@ export default function UsersConnectionProvider({
 
 
     return (
-        <UsersConnectionContext.Provider value={{peer, myId, users, leaveRoom}}>
+        <UsersConnectionContext.Provider value={{myId, users, leaveRoom}}>
             {children}
         </UsersConnectionContext.Provider>
     );

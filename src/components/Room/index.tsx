@@ -3,9 +3,8 @@
 import React, {useContext, useEffect} from 'react';
 import Streams from "@/components/Streams";
 import {SocketContext} from "@/contexts/SocketContext";
-import {usePeer} from "@/utils/hooks/usePeer";
-import UsersSettingsProvider from "@/contexts/UsersSettings";
-import UsersConnectionProvider from "@/contexts/UsersConnection";
+import {UsersSettingsProvider} from "@/contexts/UsersSettings";
+import {UsersConnectionProvider} from "@/contexts/UsersConnection";
 import Peer from "peerjs";
 
 type RoomProps = {

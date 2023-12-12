@@ -6,6 +6,8 @@ import {Server as SocketIOServer} from 'socket.io';
 import {DefaultEventsMap} from 'socket.io/dist/typed-events';
 import {Socket as ClientSocket} from 'socket.io-client';
 import React from "react";
+import {MediaConnection} from "peerjs";
+
 
 export type NextApiResponseServerIO = NextApiResponse & {
     socket: NetSocket & {
@@ -21,7 +23,8 @@ export type Nullable<T> = T | null;
 export type PeerId = string;
 export type Status = 'loading' | 'idle' | 'rejected' | 'success';
 
-export type Streams = Record<string, React.ReactNode>;
+export type Streams = Record<string, React.JSX.Element>;
+export type Peers = Record<string, MediaConnection>;
 export type User = {
     id: string,
     name: string,
