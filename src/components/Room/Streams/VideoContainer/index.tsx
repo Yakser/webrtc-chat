@@ -1,4 +1,5 @@
 import React from "react";
+import styles from './index.module.scss';
 
 type VideoContainerProps = {
     id: string;
@@ -16,7 +17,7 @@ const VideoContainer: React.FC<VideoContainerProps> = ({
     return (
         <div
             key={id}
-            className=""
+            className={styles.videoContainer}
         >
             {children}
         </div>

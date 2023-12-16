@@ -3,7 +3,8 @@
 import React, { useContext } from 'react';
 import {UsersStateContext} from "@/contexts/UsersSettings";
 import {PeerId} from "@/utils/types";
-import VideoContainer from "@/components/VideoContainer";
+import VideoContainer from "@/components/Room/Streams/VideoContainer";
+
 
 
 

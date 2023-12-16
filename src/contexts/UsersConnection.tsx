@@ -5,7 +5,7 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {PeerId, Peers, Streams} from '@/utils/types';
 import {useRouter} from 'next/navigation';
 import {UsersStateContext, UsersUpdaterContext} from "@/contexts/UsersSettings";
-import PeerVideo from "@/components/PeerVideo";
+import PeerVideo from "../components/Room/PeerVideo";
 import {SocketContext} from "@/contexts/SocketContext";
 import {append, getUsername, removeUserStream} from "@/utils/helpers";
 import {MediaConnection} from "peerjs";
@@ -126,7 +126,7 @@ export const UsersConnectionProvider: React.FC<Props> = ({
 
     useEffect(() => {
         socket?.on('user:left', (peerId: PeerId) => {
-            if (!peerId) return;
+            if (peerId === "") return;
             if (myId === peerId) router.push('/');
             else {
                 setStreams(removeUserStream(peerId));

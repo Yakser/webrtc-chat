@@ -2,10 +2,10 @@ import type {Metadata} from 'next'
 import {Inter} from 'next/font/google'
 import '@/scss/style.scss';
 import StyledComponentsRegistry from "@/lib/AntdRegistry";
-import {Providers} from "@/utils/providers";
 
 import React from "react";
-import MainLayout from "@/components/MainLayout";
+import MainLayout from "../components/MainLayout";
+import {Providers} from "@/utils/components/Providers";
 
 const inter = Inter({subsets: ['latin']})
 

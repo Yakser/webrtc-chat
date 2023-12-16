@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Status = () => {
+const EndCallIcon = () => {
     return (
         <div>
-            #todo Status
+
         </div>
     );
 };
 
-export default Status;
+export default EndCallIcon;

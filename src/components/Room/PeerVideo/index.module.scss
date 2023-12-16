@@ -1,11 +1,11 @@
-@use '@/scss/utils/colors';
-
 .video {
-  max-width: 40rem;
+  aspect-ratio: 4 / 3;
+  max-width: 60%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  place-self: center;
 }
 
 .video__my {

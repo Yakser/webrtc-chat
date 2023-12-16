@@ -1,9 +1,9 @@
 import {useContext} from 'react';
 
-import PeerVideo from "@/components/PeerVideo";
 import {UsersConnectionContext} from "@/contexts/UsersConnection";
-import VideoContainer from "@/components/VideoContainer";
 import {getUsername} from "@/utils/helpers";
+import VideoContainer from "@/components/Room/Streams/VideoContainer";
+import PeerVideo from "@/components/Room/PeerVideo";
 
 export default function MyStream({
                                      stream

@@ -10,7 +10,7 @@ import {
 } from 'antd';
 import {UsersListContext} from "@/contexts/UsersListContext";
 
-type FieldType = {
+type Fields = {
     roomName: string;
     roomId: string;
     isPrivate: boolean;
@@ -19,7 +19,7 @@ type FieldType = {
 
 
 const CreateRoomForm = () => {
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<Fields>();
     const isPrivate = Form.useWatch('isPrivate', form);
     // fixme: this is incorrect, we should save all connections, not users connected after us
     const users = useContext(UsersListContext);
@@ -34,21 +34,21 @@ const CreateRoomForm = () => {
                 autoComplete="off"
                 form={form}
             >
-                <Form.Item<FieldType>
+                <Form.Item<Fields>
                     label="Room ID"
                     name="roomId"
                     rules={[{required: true, message: 'Please input room ID!'}]}
                 >
                     <Input/>
                 </Form.Item>
-                <Form.Item<FieldType>
+                <Form.Item<Fields>
                     label="Room name"
                     name="roomName"
                     rules={[{required: true, message: 'Please fill room name!'}]}
                 >
                     <Input/>
                 </Form.Item>
-                <Form.Item<FieldType>
+                <Form.Item<Fields>
                     name="isPrivate"
                     valuePropName="checked"
                     wrapperCol={{offset: 8, span: 16}}

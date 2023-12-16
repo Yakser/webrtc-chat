@@ -1,12 +1,12 @@
 'use client'
 
-import {createContext, ReactNode, useEffect, useState} from 'react';
+import {ReactNode, useState} from 'react';
 import {ConfigProvider, theme} from 'antd';
 import {io} from "socket.io-client";
 import {SocketContext} from "@/contexts/SocketContext";
 import {PeerContext} from "@/contexts/PeerContext";
 import Peer from "peerjs";
-import {UsersListContext, UsersListContextProvider} from "@/contexts/UsersListContext";
+import {UsersListContextProvider} from "@/contexts/UsersListContext";
 
 const socket = io('/', {path: '/api/socketio'});
 
@@ -19,7 +19,6 @@ export function Providers({children}: { children: ReactNode }) {
         <ConfigProvider
             theme={{
                 algorithm: theme.darkAlgorithm,
-                components: {}
             }}
         >
             <SocketContext.Provider value={socket}>

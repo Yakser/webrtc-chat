@@ -1,8 +1,8 @@
 'use client';
 
-import MyStream from "@/components/Streams/MyStream";
-import OtherStreams from "@/components/Streams/OtherStreams";
 import styles from './index.module.scss';
+import MyStream from "@/components/Room/Streams/MyStream";
+import OtherStreams from "@/components/Room/Streams/OtherStreams";
 
 export default function Streams({
                                     stream,
@@ -19,5 +19,5 @@ export default function Streams({
 }
 
 type StreamsProps = {
-    stream: MediaStream;
+        stream: MediaStream;
 };
