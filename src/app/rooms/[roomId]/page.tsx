@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect} from "react";
 import {useMediaStream} from "@/utils/hooks/useMediaStream";
 import {Messages} from "@/utils/constants";
 import Room from "@/components/Room";

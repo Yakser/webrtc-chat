@@ -4,11 +4,10 @@ import {useContext, useEffect, useState} from 'react';
 
 import Peer from 'peerjs';
 
-import {Nullable, PeerId, User} from '@/utils/types';
+import {Nullable, PeerId} from '@/utils/types';
 import {SocketContext} from "@/contexts/SocketContext";
 import {PeerContext} from "@/contexts/PeerContext";
 import {getUsername} from "@/utils/helpers";
-import {log} from "util";
 
 export const usePeer = () => {
     const peerContext = useContext(PeerContext);

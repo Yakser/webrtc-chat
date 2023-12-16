@@ -1,4 +1,3 @@
-export const MYSELF = 'You';
 export const SOCKET_PATH = '/api/socketio';
 
 export const enum Messages {

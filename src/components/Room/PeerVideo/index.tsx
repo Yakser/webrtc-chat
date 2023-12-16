@@ -5,7 +5,7 @@ import {Typography} from 'antd';
 export type PeerVideoProps = {
     stream: MediaStream;
     name: string;
-    isMe?: boolean;
+    isMe: boolean;
 }
 
 const PeerVideo = ({

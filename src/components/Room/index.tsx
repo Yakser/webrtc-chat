@@ -8,6 +8,7 @@ import Peer from "peerjs";
 import ControlPanel from "@/components/Room/ControlPanel";
 import Streams from "@/components/Room/Streams";
 import styles from './index.module.scss';
+import {Messages} from "@/utils/constants";
 
 
 type RoomProps = {
@@ -29,8 +30,8 @@ const Room: React.FC<RoomProps> = ({stream, peer, isPeerReady, myId}) => {
     }, [socket]);
 
 
-    if (!isPeerReady) return <>Loading...</>;
-    if (!peer) return <>Peer error!</>;
+    if (!isPeerReady) return <>{Messages.LOADER_PEER_MSG}</>;
+    if (!peer) return <>{Messages.FAILURE}</>;
 
     return (
         <UsersSettingsProvider>
