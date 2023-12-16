@@ -6,7 +6,7 @@ import {
     VideoCameraOutlined,
     HomeOutlined,
 } from '@ant-design/icons';
-import {Layout, Menu, Typography} from 'antd';
+import {Layout, Menu} from 'antd';
 import Link from "next/link";
 
 const {Sider} = Layout;

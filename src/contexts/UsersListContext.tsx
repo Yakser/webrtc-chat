@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import {SocketContext} from "@/contexts/SocketContext";
 import {User} from "@/utils/types";
 

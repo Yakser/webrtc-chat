@@ -51,7 +51,7 @@ export const UsersConnectionProvider: React.FC<Props> = ({
         setStreams(removeUserStream(id));
     }
 
-    // * user a accepts user b and make a call
+    // * user A accepts user B and make a call
     useEffect(() => {
         if (!peer) return;
 
