@@ -20,7 +20,13 @@ export const usePeer = () => {
         if (peer || peerContext.peer) return;
         import("peerjs").then(({default: Peer}) => {
             try {
-                const peer = new Peer();
+                const peer = new Peer({
+                    config: {
+                        'iceServers': [
+                            { url: 'stun:stun.l.google.com:19302' },
+                        ]
+                    }
+                });
                 peerContext.setIsPeerReady(true);
                 peerContext.setPeer(peer);
                 setPeer(peer);
