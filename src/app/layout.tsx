@@ -6,6 +6,7 @@ import StyledComponentsRegistry from "@/lib/AntdRegistry";
 import React from "react";
 import MainLayout from "../components/MainLayout";
 import {Providers} from "@/utils/components/Providers";
+import RootSocketConnector from "@/utils/components/RootSocketConnector";
 
 const inter = Inter({subsets: ['latin']})
 
@@ -28,6 +29,7 @@ export default function RootLayout({
         <Providers>
             <StyledComponentsRegistry>
                 <MainLayout>
+                    <RootSocketConnector/>
                     {children}
                 </MainLayout>
             </StyledComponentsRegistry>

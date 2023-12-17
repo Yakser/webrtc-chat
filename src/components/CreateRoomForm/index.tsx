@@ -61,9 +61,9 @@ const CreateRoomForm = () => {
                             <Checkbox.Group>
                                 <Flex vertical>
                                     {
-                                        users.map((item, index) => (
-                                            <Checkbox key={index} value={{item}} style={{lineHeight: '32px'}}>
-                                                {item.name}
+                                        Object.entries(users).map(([id, name]) => (
+                                            <Checkbox key={id} value={id + name} style={{lineHeight: '32px'}}>
+                                                {name}
                                             </Checkbox>
                                         ))
                                     }

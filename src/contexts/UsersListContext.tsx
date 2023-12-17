@@ -1,21 +1,19 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
 import {SocketContext} from "@/contexts/SocketContext";
-import {User} from "@/utils/types";
 
-export const UsersListContext = createContext<User[]>([]);
+export const UsersListContext = createContext<Record<string, string>>({});
 
 type UsersListContextProviderProps = {
     children: React.ReactNode;
 }
 
 export const UsersListContextProvider: React.FC<UsersListContextProviderProps> = ({children}) => {
-    // fixme: use User type in socketio events
     const socket = useContext(SocketContext);
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        socket?.on('user:connected', (user: User) => {
-            setUsers([...users, user]);
+        socket?.on('user:connected', (users: Record<string, string>) => {
+            setUsers(users);
         });
     }, [socket, users]);
 

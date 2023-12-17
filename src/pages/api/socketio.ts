@@ -5,7 +5,7 @@ import {NextApiResponseServerIO, User} from '@/utils/types';
 import { SOCKET_PATH } from '@/utils/constants';
 
 export default async function handler (req: NextApiRequest, res: NextApiResponseServerIO) {
-    if (!res.socket.server.io) {
+    if (res.socket.server.io === undefined) {
         console.log('Socket is initializing');
 
         const httpServer = res.socket.server;
