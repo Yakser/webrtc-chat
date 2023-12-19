@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import {Layout, Menu} from 'antd';
 import Link from "next/link";
+import UserCard from "@/components/UserCard";
 
 const {Sider} = Layout;
 
@@ -17,7 +18,10 @@ type SidebarProps = {
 
 const Sidebar: React.FC<SidebarProps> = ({collapsed}) => {
     return (
-        <Sider trigger={null} collapsible collapsed={collapsed}>
+        <Sider trigger={null} collapsible collapsed={collapsed} style={{
+            padding: 8,
+        }}>
+            <UserCard collapsed={collapsed}/>
             <Menu
                 theme="dark"
                 mode="inline"

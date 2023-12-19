@@ -7,7 +7,7 @@ import Peer from 'peerjs';
 import {Nullable, PeerId} from '@/utils/types';
 import {SocketContext} from "@/contexts/SocketContext";
 import {PeerContext} from "@/contexts/PeerContext";
-import {getUsername} from "@/utils/helpers";
+import {useAppSelector} from "@/utils/hooks/useAppSelector";
 
 export const usePeer = () => {
     const peerContext = useContext(PeerContext);
@@ -15,17 +15,18 @@ export const usePeer = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [peer, setPeer] = useState<Nullable<Peer>>(null);
     const [myId, setMyId] = useState<PeerId>('');
+    const {user} = useAppSelector(state => state.auth);
 
     useEffect(() => {
         if (peer || peerContext.peer) return;
         import("peerjs").then(({default: Peer}) => {
             try {
                 const peer = new Peer({
-                    config: {
-                        'iceServers': [
-                            { url: 'stun:stun.l.google.com:19302' },
-                        ]
-                    }
+                    // config: {
+                    //     'iceServers': [
+                    //         { url: 'stun:stun.l.google.com:19302' },
+                    //     ]
+                    // }
                 });
                 peerContext.setIsPeerReady(true);
                 peerContext.setPeer(peer);
@@ -38,7 +39,7 @@ export const usePeer = () => {
                     peerContext.setMyId(id);
                     socket?.emit('user:connect', {
                         id,
-                        name: getUsername()
+                        name: user.username
                     });
                 });
 
@@ -47,7 +48,7 @@ export const usePeer = () => {
                 console.error(error);
             }
         })
-    }, [peer, peerContext, socket]);
+    }, [peer, peerContext, socket, user.username]);
 
     return {
         peer: peerContext.peer || peer,

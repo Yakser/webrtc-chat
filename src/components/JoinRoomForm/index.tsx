@@ -1,34 +1,24 @@
 'use client';
 
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback} from "react";
 import {Button, Form, Input, Typography} from "antd";
 import {useRouter} from 'next/navigation';
-import {getUsername} from "@/utils/helpers";
-import {LocalStorageKeys} from "@/utils/constants";
-import {usePeer} from "@/utils/hooks/usePeer";
 
 type FieldType = {
-    username: string;
     roomId: string;
 };
 
 
 const JoinRoomForm = () => {
     const router = useRouter();
-    const {myId} = usePeer();
     const [form] = Form.useForm();
 
     const onFinish = useCallback(
         (values: FieldType) => {
-            localStorage.setItem(LocalStorageKeys.USERNAME, values.username);
             router.push(`rooms/${values.roomId}`);
         },
         [router]
     );
-
-    useEffect(() => {
-        form.setFieldValue('username', getUsername());
-    }, [form]);
 
     return (
         <>
@@ -45,15 +35,6 @@ const JoinRoomForm = () => {
                 autoComplete="off"
                 form={form}
             >
-                <Form.Item<FieldType>
-                    label="Username"
-                    name="username"
-                    extra={myId && `Your device ID is ${myId}` || 'Getting your device ID...'}
-                    rules={[{required: true, message: 'Please input your username!'}]}
-                    initialValue={'Anonymous'}
-                >
-                    <Input/>
-                </Form.Item>
                 <Form.Item<FieldType>
                     label="Room ID"
                     name="roomId"

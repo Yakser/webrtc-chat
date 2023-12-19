@@ -7,7 +7,7 @@ import Room from "@/components/Room";
 import {Typography} from "antd";
 import {SocketContext} from "@/contexts/SocketContext";
 import {usePeer} from "@/utils/hooks/usePeer";
-import {getUsername} from "@/utils/helpers";
+import {useAppSelector} from "@/utils/hooks/useAppSelector";
 
 type PageProps = {
     params: { roomId: string };
@@ -16,20 +16,20 @@ const Page: React.FC<PageProps> = ({params}: { params: { roomId: string } }) => 
     const socket = useContext(SocketContext);
     const {stream, isLoading} = useMediaStream();
     const {myId, peer, isPeerReady} = usePeer();
+    const {user} = useAppSelector(state => state.auth);
 
     useEffect(() => {
-        const username = getUsername();
         console.log('room join', {
             roomId: params.roomId,
             userId: myId,
-            userName: username,
+            userName: user.username,
         })
         socket?.emit('room:join', {
             roomId: params.roomId,
             userId: myId,
-            userName: username,
+            userName: user.username,
         });
-    }, [myId, params.roomId, socket]);
+    }, [myId, params.roomId, socket, user.username]);
 
     if (isLoading) return <>{Messages.LOADER_STREAM_MSG}</>;
     if (!stream) return <>Error! {Messages.FAILURE}</>;

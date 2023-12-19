@@ -1,0 +1,33 @@
+.userCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  &_collapsed {
+    .userCard__name {
+      display: none;
+    }
+
+    .userCard__avatar {
+      width: 3rem;
+      height: 3rem  ;
+    }
+
+  }
+}
+
+.userCard__avatar {
+  width: 4rem;
+  height: 4rem;
+  background-color: rgba(255, 255, 255, .4);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.userCard__name {
+  cursor: pointer;
+  transition: .2s color;
+  text-decoration: none;
+}

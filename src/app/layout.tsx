@@ -7,6 +7,7 @@ import React from "react";
 import MainLayout from "../components/MainLayout";
 import {Providers} from "@/utils/components/Providers";
 import RootSocketConnector from "@/utils/components/RootSocketConnector";
+import UserDataFetcher from "@/components/UserDataFetcher";
 
 const inter = Inter({subsets: ['latin']})
 
@@ -30,6 +31,7 @@ export default function RootLayout({
             <StyledComponentsRegistry>
                 <MainLayout>
                     <RootSocketConnector/>
+                    <UserDataFetcher/>
                     {children}
                 </MainLayout>
             </StyledComponentsRegistry>

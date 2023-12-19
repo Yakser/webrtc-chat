@@ -7,9 +7,10 @@ import {useRouter} from 'next/navigation';
 import {UsersStateContext, UsersUpdaterContext} from "@/contexts/UsersSettings";
 import PeerVideo from "../components/Room/PeerVideo";
 import {SocketContext} from "@/contexts/SocketContext";
-import {append, getUsername, removeUserStream} from "@/utils/helpers";
+import {append, removeUserStream} from "@/utils/helpers";
 import {MediaConnection} from "peerjs";
 import {usePeer} from "@/utils/hooks/usePeer";
+import {useAppSelector} from "@/utils/hooks/useAppSelector";
 
 export type UsersConnectionContextType = {
     myId: string,
@@ -38,6 +39,8 @@ export const UsersConnectionProvider: React.FC<Props> = ({
     const {peer} = usePeer();
     const socket = useContext(SocketContext);
     const {streams} = useContext(UsersStateContext);
+    const {user} = useAppSelector(state => state.auth);
+
     const {
         setStreams,
     } = useContext(UsersUpdaterContext);
@@ -70,7 +73,7 @@ export const UsersConnectionProvider: React.FC<Props> = ({
                     {
                         metadata: {
                             user: {
-                                name: getUsername(),
+                                name: user.username,
                                 id: userId,
                             },
                         },
@@ -92,7 +95,7 @@ export const UsersConnectionProvider: React.FC<Props> = ({
         return () => {
             socket?.off('user:joined');
         };
-    }, [peer, setStreams, socket, stream]);
+    }, [peer, setStreams, socket, stream, user.username]);
 
     // * user b answers to user a's call
     useEffect(() => {

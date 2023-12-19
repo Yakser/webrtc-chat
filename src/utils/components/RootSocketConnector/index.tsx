@@ -8,7 +8,7 @@ const RootSocketConnector: React.FC = () => {
 
     useEffect(() => {
         return () => {
-            socket?.emit('disconnect');
+            // socket?.emit('disconnect');
         }
     }, [socket]);
     return <></>;
