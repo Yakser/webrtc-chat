@@ -43,7 +43,7 @@ const UserCard: React.FC<Props> = ({collapsed}) => {
                         <Button onClick={() => router.push('/login')}>
                             Login
                         </Button>
-                        <Button onClick={() => router.push('/register')}>
+                        <Button onClick={() => router.push('/register')} type={'primary'}>
                             Register
                         </Button>
                     </>
