@@ -1,14 +1,16 @@
 'use client';
 
-import React, {useContext} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Button,
     Checkbox,
     Flex,
     Form,
-    Input,
+    Input, Spin,
 } from 'antd';
-import {UsersListContext} from "@/contexts/UsersListContext";
+import {UserDetail} from "@/utils/api/types";
+import api from "@/utils/api";
+import {useAppSelector} from "@/utils/hooks/useAppSelector";
 
 type Fields = {
     roomName: string;
@@ -21,8 +23,20 @@ type Fields = {
 const CreateRoomForm = () => {
     const [form] = Form.useForm<Fields>();
     const isPrivate = Form.useWatch('isPrivate', form);
-    // fixme: this is incorrect, we should save all connections, not users connected after us
-    const users = useContext(UsersListContext);
+    const [users, setUsers] = useState<UserDetail[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const {user} = useAppSelector(state => state.auth);
+
+    useEffect(() => {
+        setIsLoading(true);
+        api.get<UserDetail[]>('/users/').then(response => {
+            setUsers(response.data.filter(u => u.username != user.username));
+        }).catch(error => {
+            console.log(error);
+        }).finally(() => {
+            setIsLoading(false);
+        })
+    }, [user.username]);
 
     return (
         <>
@@ -58,17 +72,22 @@ const CreateRoomForm = () => {
                 {
                     isPrivate && (
                         <Form.Item name="checkbox-group" label="Choose allowed users:">
-                            <Checkbox.Group>
-                                <Flex vertical>
-                                    {
-                                        Object.entries(users).map(([id, name]) => (
-                                            <Checkbox key={id} value={id + name} style={{lineHeight: '32px'}}>
-                                                {name}
-                                            </Checkbox>
-                                        ))
-                                    }
-                                </Flex>
-                            </Checkbox.Group>
+                            {isLoading ? (
+                                <Spin/>
+                            ) : (
+                                <Checkbox.Group>
+                                    <Flex vertical>
+                                        {
+                                            Object.entries(users).map(([id, user]) => (
+                                                <Checkbox key={id} value={id} style={{lineHeight: '32px'}}>
+                                                    {user.username} ({user.first_name} {user.last_name})
+                                                </Checkbox>
+                                            ))
+                                        }
+                                    </Flex>
+                                </Checkbox.Group>
+                            )
+                            }
                         </Form.Item>
                     )
                 }

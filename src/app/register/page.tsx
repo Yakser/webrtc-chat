@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './page.module.scss';
-import LoginForm from "@/app/login/components/LoginForm";
+import RegisterForm from "@/app/register/components/RegisterForm";
 
 const Page = () => {
     return (
-        <section className={styles.login}>
-            <LoginForm/>
+        <section className={styles.register}>
+            <RegisterForm/>
         </section>
     );
 };

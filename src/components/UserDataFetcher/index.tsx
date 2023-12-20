@@ -8,22 +8,28 @@ import {useAppDispatch} from "@/utils/hooks/useAppDispatch";
 import {useAppSelector} from "@/utils/hooks/useAppSelector";
 import {getAccessToken} from "@/utils/api/tokens";
 import {fetchUserData, logout} from "@/utils/auth/thunk";
+import {usePathname} from "next/dist/client/components/navigation";
 
 
 const UserDataFetcher = () => {
     const dispatch = useAppDispatch();
     const {user} = useAppSelector((state) => state.auth);
     const router = useRouter();
-    const token = getAccessToken();
+    const pathname = usePathname();
 
     useEffect(() => {
+        const token = getAccessToken();
+
         if (token && !user.id) {
             dispatch(fetchUserData());
         } else if (!token) {
             dispatch(logout());
-            router.push("/login");
+
+            if (pathname !== '/register') {
+                router.push("/login");
+            }
         }
-    }, [user.id, dispatch, router, token]);
+    }, [user.id, dispatch, router, pathname]);
 
     return <></>;
 

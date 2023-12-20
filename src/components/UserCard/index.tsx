@@ -5,6 +5,10 @@ import styles from './index.module.scss'
     ;
 import Link from "next/link";
 import {useAppSelector} from "@/utils/hooks/useAppSelector";
+import {Button} from 'antd';
+import {useRouter} from 'next/navigation';
+import {useAppDispatch} from "@/utils/hooks/useAppDispatch";
+import {logout} from "@/utils/auth/thunk";
 
 type Props = {
     collapsed: boolean;
@@ -12,6 +16,11 @@ type Props = {
 
 const UserCard: React.FC<Props> = ({collapsed}) => {
     const {user} = useAppSelector((state) => state.auth);
+    const router = useRouter();
+    const dispatch = useAppDispatch();
+    const onLogout = () => {
+        dispatch(logout());
+    }
     return (
         <div className={`${styles.userCard} ${collapsed && styles.userCard_collapsed}`}>
             {
@@ -25,15 +34,18 @@ const UserCard: React.FC<Props> = ({collapsed}) => {
                         <Link href={'/profile'}>
                             <div className={styles.userCard__avatar}></div>
                         </Link>
+                        <Button onClick={onLogout}>
+                            Logout
+                        </Button>
                     </>
                 ) : (
                     <>
-                        <Link href={'/login'}>
-                            Войти
-                        </Link>
-                        <Link href={'/register'}>
-                            Зарегистрироваться
-                        </Link>
+                        <Button onClick={() => router.push('/login')}>
+                            Login
+                        </Button>
+                        <Button onClick={() => router.push('/register')}>
+                            Register
+                        </Button>
                     </>
                 )
             }

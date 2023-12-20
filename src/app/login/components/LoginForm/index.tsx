@@ -5,6 +5,7 @@ import {
     Button,
     Form,
     Input,
+    Typography,
 } from 'antd';
 import {useRouter} from "next/navigation";
 import {useAppDispatch} from "@/utils/hooks/useAppDispatch";
@@ -43,6 +44,9 @@ const LoginForm: React.FC = () => {
 
     return (
         <>
+            <Typography.Title level={2}>
+                Login
+            </Typography.Title>
             <Form
                 name="login"
                 labelCol={{span: 8}}

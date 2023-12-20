@@ -57,13 +57,13 @@ export const logout = createAsyncThunk(
     }
 );
 
-export const register = createAsyncThunk<UserDetail, UserDetail>(
+export const register = createAsyncThunk<UserDetail, Omit<UserDetail, 'id'>>(
     'auth/register',
     async (payload, {rejectWithValue}) => {
         try {
             const response = await registerApi.post<UserDetail>('/users/', payload);
             return response.data;
-        } catch (error: unknown) {
+        } catch (error: unknown) {``
             if (error instanceof AxiosError) {
                 const axiosError = error as AxiosError;
                 return rejectWithValue(axiosError.response?.data);
