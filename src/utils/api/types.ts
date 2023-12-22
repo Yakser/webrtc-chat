@@ -11,3 +11,7 @@ export type UserDetail = {
     first_name: string,
     last_name: string,
 }
+
+export type RoomIsPrivateFlag = {
+    is_private: boolean,
+}

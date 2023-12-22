@@ -18,10 +18,10 @@ export const usePeer = () => {
     const {user} = useAppSelector(state => state.auth);
 
     useEffect(() => {
-        if (peer || peerContext.peer) return;
+        if (peer || peerContext.peer || !user.id) return;
         import("peerjs").then(({default: Peer}) => {
             try {
-                const peer = new Peer({
+                const newPeer = new Peer({
                     // config: {
                     //     'iceServers': [
                     //         { url: 'stun:stun.l.google.com:19302' },
@@ -29,11 +29,11 @@ export const usePeer = () => {
                     // }
                 });
                 peerContext.setIsPeerReady(true);
-                peerContext.setPeer(peer);
+                peerContext.setPeer(newPeer);
                 setPeer(peer);
                 setIsLoading(false);
 
-                peer.on('open', (id) => {
+                newPeer.on('open', (id) => {
                     console.log('your device id: ', id);
                     setMyId(id);
                     peerContext.setMyId(id);
@@ -43,12 +43,12 @@ export const usePeer = () => {
                     });
                 });
 
-                peer.on('error', () => console.error('Failed to setup peer connection'));
+                newPeer.on('error', () => console.error('Failed to setup peer connection'));
             } catch (error) {
                 console.error(error);
             }
         })
-    }, [peer, peerContext, socket, user.username]);
+    }, [peer, peerContext, socket, user.id, user.username]);
 
     return {
         peer: peerContext.peer || peer,
