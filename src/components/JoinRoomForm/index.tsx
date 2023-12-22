@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useCallback} from "react";
+import React from "react";
 import {Button, Form, Input, Typography} from "antd";
 import {useRouter} from 'next/navigation';
 import {usePeer} from "@/utils/hooks/usePeer";
@@ -17,12 +17,9 @@ const JoinRoomForm = () => {
     const [form] = Form.useForm<FieldType>();
     const {myId} = usePeer();
 
-    const onFinish = useCallback(
-        (values: FieldType) => {
-            router.push(`rooms/${values.roomId}`);
-        },
-        [router]
-    );
+    const onFinish = (values: FieldType) => {
+        router.push(`rooms/${values.roomId}`);
+    }
 
     return (
         <>
@@ -51,43 +48,36 @@ const JoinRoomForm = () => {
                             validator(rule, value) {
                                 return new Promise((resolve, reject) => {
 
-                                api.get<RoomIsPrivateFlag>(`/rooms/is-private/`, {params: {room_id: value}}).then(response => {
-                                   if (response.status === 200) {
-                                       reject('Room with given id already exists!')
-                                    } else {
-                                        reject('Unknown server error!');
-                                    }
-                                }).catch(({response}) => {
-                                    console.log(response.status)
-                                    if (response.status === 404) {
-                                        resolve('');
-                                    } else {
-                                        reject('Unknown server error!');
-                                    }
+                                    api.get<RoomIsPrivateFlag>(`/rooms/is-private/`, {params: {room_id: value}}).then(() => {
+                                        resolve('')
+                                    }).catch(({response}) => {
+                                        if (response.status === 404) {
+                                            reject('Room with given id does not exist!');
+                                        } else {
+                                            reject('Unknown server error!');
+                                        }
+                                    })
                                 })
-                                })
-                                // return new Promise((resolve, reject) => {
-                                //     request("/users/check", { username: value }).then(
-                                //         (response) => {
-                                //             if (response.data.exist) {
-                                //                 reject("Username already exists.");
-                                //             } else {
-                                //                 resolve();
-                                //             }
-                                //         }
-                                //     );
-                                // });
                             }
                         }),
-                        {required: true, message: 'Please input room ID!'}
+                        {required: true, message: 'Please fill room id!'}
                     ]}
                 >
                     <Input/>
                 </Form.Item>
-                <Form.Item wrapperCol={{offset: 8, span: 16}}>
-                    <Button type="primary" htmlType="submit">
-                        Join
-                    </Button>
+                <Form.Item wrapperCol={{offset: 8, span: 16}} shouldUpdate>
+                    {
+                        () => (
+                            <Button type="primary" htmlType="submit"  disabled={
+                                !form.isFieldsTouched(true) ||
+                                form.getFieldsError().filter(({ errors }) => errors.length)
+                                    .length > 0
+                            }>
+                                Join
+                            </Button>
+                        )
+                    }
+
                 </Form.Item>
             </Form>
         </>

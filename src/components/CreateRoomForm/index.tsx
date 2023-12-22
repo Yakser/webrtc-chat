@@ -9,6 +9,7 @@ import {
 } from 'antd';
 import {useRouter} from "next/navigation";
 import api from "@/utils/api";
+import {RoomIsPrivateFlag} from "@/utils/api/types";
 
 type Fields = {
     roomId: string;
@@ -56,7 +57,28 @@ const CreateRoomForm = () => {
                 <Form.Item<Fields>
                     label="Room ID"
                     name="roomId"
-                    rules={[{required: true, message: 'Please input room ID!'}]}
+                    rules={[{required: true, message: 'Please input room ID!'},
+                        () => ({
+                            validator(rule, value) {
+                                return new Promise((resolve, reject) => {
+
+                                    api.get<RoomIsPrivateFlag>(`/rooms/is-private/`, {params: {room_id: value}}).then(response => {
+                                        if (response.status === 200) {
+                                            reject('Room with given id already exists!')
+                                        } else {
+                                            reject('Unknown server error!');
+                                        }
+                                    }).catch(({response}) => {
+                                        console.log(response.status)
+                                        if (response.status === 404) {
+                                            resolve('');
+                                        } else {
+                                            reject('Unknown server error!');
+                                        }
+                                    })
+                                })
+                            }
+                        }),]}
                 >
                     <Input/>
                 </Form.Item>
