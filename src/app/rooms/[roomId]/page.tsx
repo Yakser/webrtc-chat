@@ -34,6 +34,11 @@ const Page: React.FC<PageProps> = ({params}: { params: { roomId: string } }) => 
         setIsLoading(true);
         api.post(`/rooms/verify/`, {password}, {params: {room_id: params.roomId}}).then(response => {
             if (response.status === 200) {
+                socket?.emit('room:join', {
+                    roomId: params.roomId,
+                    userId: myId,
+                    userName: user.username,
+                });
                 return setPasswordIsCorrect(true)
             }
 
@@ -56,13 +61,14 @@ const Page: React.FC<PageProps> = ({params}: { params: { roomId: string } }) => 
         setIsLoading(true);
         api.get<RoomIsPrivateFlag>(`/rooms/is-private/`, {params: {room_id: params.roomId}}).then(response => {
             setShouldFillPassword(response.data.is_private);
+            if (!response.data.is_private) {
+                socket?.emit('room:join', {
+                    roomId: params.roomId,
+                    userId: myId,
+                    userName: user.username,
+                });
+            }
         }).catch(() => setErrors(['Unknown server error!'])).finally(() => setIsLoading(false))
-
-        socket?.emit('room:join', {
-            roomId: params.roomId,
-            userId: myId,
-            userName: user.username,
-        });
         return () => leaveRoom(myId);
     }, [leaveRoom, myId, params.roomId, socket, user.username]);
 
