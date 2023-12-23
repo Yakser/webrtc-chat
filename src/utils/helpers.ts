@@ -1,7 +1,6 @@
 'use client';
 
 import {Streams} from "@/utils/types";
-import {LocalStorageKeys} from "@/utils/constants";
 
 
 // fixme: looks weird
@@ -21,9 +20,3 @@ export function removeUserStream(userId: string): ((streams: Streams) => Streams
     }
 }
 
-
-export function getUsername(): string {
-    const username = localStorage.getItem(LocalStorageKeys.USERNAME);
-    if (username != null) return username;
-    return 'Anonymous';
-}

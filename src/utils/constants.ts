@@ -5,7 +5,3 @@ export const enum Messages {
     LOADER_STREAM_MSG = 'Hold on. Getting your video stream ready... 🚀',
     LOADER_PEER_MSG = 'Setting you up... 🎮',
 }
-
-export const enum LocalStorageKeys {
-    USERNAME = 'username',
-}

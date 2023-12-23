@@ -16,7 +16,7 @@ export default function OtherStreams() {
         <VideoContainer
           key={id}
           id={id}
-          stream={element.props.stream}
+          stream={element ? element.props.stream: null}
         >
           {element}
         </VideoContainer>

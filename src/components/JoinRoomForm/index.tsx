@@ -1,40 +1,34 @@
 'use client';
 
-import React, {useCallback, useEffect} from "react";
+import React from "react";
 import {Button, Form, Input, Typography} from "antd";
 import {useRouter} from 'next/navigation';
-import {getUsername} from "@/utils/helpers";
-import {LocalStorageKeys} from "@/utils/constants";
 import {usePeer} from "@/utils/hooks/usePeer";
+import api from "@/utils/api";
+import {RoomIsPrivateFlag} from "@/utils/api/types";
 
 type FieldType = {
-    username: string;
     roomId: string;
 };
 
 
 const JoinRoomForm = () => {
     const router = useRouter();
+    const [form] = Form.useForm<FieldType>();
     const {myId} = usePeer();
-    const [form] = Form.useForm();
 
-    const onFinish = useCallback(
-        (values: FieldType) => {
-            localStorage.setItem(LocalStorageKeys.USERNAME, values.username);
-            router.push(`rooms/${values.roomId}`);
-        },
-        [router]
-    );
-
-    useEffect(() => {
-        form.setFieldValue('username', getUsername());
-    }, [form]);
+    const onFinish = (values: FieldType) => {
+        router.push(`rooms/${values.roomId}`);
+    }
 
     return (
         <>
             <Typography.Title level={2}>
                 Join room
             </Typography.Title>
+            <Typography.Paragraph>
+                Your device ID is: {myId}
+            </Typography.Paragraph>
             <Form
                 name="joinRoom"
                 labelCol={{span: 8}}
@@ -46,25 +40,44 @@ const JoinRoomForm = () => {
                 form={form}
             >
                 <Form.Item<FieldType>
-                    label="Username"
-                    name="username"
-                    extra={myId && `Your device ID is ${myId}` || 'Getting your device ID...'}
-                    rules={[{required: true, message: 'Please input your username!'}]}
-                    initialValue={'Anonymous'}
-                >
-                    <Input/>
-                </Form.Item>
-                <Form.Item<FieldType>
                     label="Room ID"
                     name="roomId"
-                    rules={[{required: true, message: 'Please input room ID!'}]}
+                    validateDebounce={500}
+                    rules={[
+                        () => ({
+                            validator(rule, value) {
+                                return new Promise((resolve, reject) => {
+
+                                    api.get<RoomIsPrivateFlag>(`/rooms/is-private/`, {params: {room_id: value}}).then(() => {
+                                        resolve('')
+                                    }).catch(({response}) => {
+                                        if (response.status === 404) {
+                                            reject('Room with given id does not exist!');
+                                        } else {
+                                            reject('Unknown server error!');
+                                        }
+                                    })
+                                })
+                            }
+                        }),
+                        {required: true, message: 'Please fill room id!'}
+                    ]}
                 >
                     <Input/>
                 </Form.Item>
-                <Form.Item wrapperCol={{offset: 8, span: 16}}>
-                    <Button type="primary" htmlType="submit">
-                        Join
-                    </Button>
+                <Form.Item wrapperCol={{offset: 8, span: 16}} shouldUpdate>
+                    {
+                        () => (
+                            <Button type="primary" htmlType="submit"  disabled={
+                                !form.isFieldsTouched(true) ||
+                                form.getFieldsError().filter(({ errors }) => errors.length)
+                                    .length > 0
+                            }>
+                                Join
+                            </Button>
+                        )
+                    }
+
                 </Form.Item>
             </Form>
         </>

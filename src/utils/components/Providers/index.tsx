@@ -7,6 +7,8 @@ import {SocketContext} from "@/contexts/SocketContext";
 import {PeerContext} from "@/contexts/PeerContext";
 import Peer from "peerjs";
 import {UsersListContextProvider} from "@/contexts/UsersListContext";
+import {Provider} from "react-redux";
+import {store} from "@/utils/store";
 
 const socket = io('/', {path: '/api/socketio'});
 
@@ -16,25 +18,27 @@ export function Providers({children}: { children: ReactNode }) {
     const [myId, setMyId] = useState<string>('');
 
     return (
-        <ConfigProvider
-            theme={{
-                algorithm: theme.darkAlgorithm,
-            }}
-        >
-            <SocketContext.Provider value={socket}>
-                <PeerContext.Provider value={{
-                    peer,
-                    isPeerReady,
-                    myId,
-                    setPeer,
-                    setIsPeerReady,
-                    setMyId
-                }}>
-                    <UsersListContextProvider>
-                        {children}
-                    </UsersListContextProvider>
-                </PeerContext.Provider>
-            </SocketContext.Provider>
-        </ConfigProvider>
+        <Provider store={store}>
+            <ConfigProvider
+                theme={{
+                    algorithm: theme.darkAlgorithm,
+                }}
+            >
+                <SocketContext.Provider value={socket}>
+                    <PeerContext.Provider value={{
+                        peer,
+                        isPeerReady,
+                        myId,
+                        setPeer,
+                        setIsPeerReady,
+                        setMyId
+                    }}>
+                        <UsersListContextProvider>
+                            {children}
+                        </UsersListContextProvider>
+                    </PeerContext.Provider>
+                </SocketContext.Provider>
+            </ConfigProvider>
+        </Provider>
     );
 }

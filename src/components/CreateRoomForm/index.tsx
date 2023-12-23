@@ -1,28 +1,47 @@
 'use client';
 
-import React, {useContext} from "react";
+import React, {useState} from "react";
 import {
     Button,
     Checkbox,
-    Flex,
     Form,
     Input,
 } from 'antd';
-import {UsersListContext} from "@/contexts/UsersListContext";
+import {useRouter} from "next/navigation";
+import api from "@/utils/api";
+import {RoomIsPrivateFlag} from "@/utils/api/types";
 
 type Fields = {
-    roomName: string;
     roomId: string;
+    roomPassword: string;
     isPrivate: boolean;
-    invitedUsers: string[];
 };
 
 
 const CreateRoomForm = () => {
     const [form] = Form.useForm<Fields>();
     const isPrivate = Form.useWatch('isPrivate', form);
-    // fixme: this is incorrect, we should save all connections, not users connected after us
-    const users = useContext(UsersListContext);
+    const router = useRouter();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const onFinish = ({roomId, roomPassword, isPrivate}: Fields) => {
+        setIsLoading(true);
+        api.post('/rooms/', {
+            password: roomPassword,
+            room_id: roomId,
+            is_private: isPrivate
+        })
+            .then(response => {
+                if (response.status === 201) {
+                    return router.push(`rooms/${roomId}`);
+                }
+
+                // todo: set errors
+
+            })
+            .catch(error => console.log(error))
+            .finally(() => setIsLoading(false))
+    }
 
     return (
         <>
@@ -33,18 +52,33 @@ const CreateRoomForm = () => {
                 style={{maxWidth: 600}}
                 autoComplete="off"
                 form={form}
+                onFinish={onFinish}
             >
                 <Form.Item<Fields>
                     label="Room ID"
                     name="roomId"
-                    rules={[{required: true, message: 'Please input room ID!'}]}
-                >
-                    <Input/>
-                </Form.Item>
-                <Form.Item<Fields>
-                    label="Room name"
-                    name="roomName"
-                    rules={[{required: true, message: 'Please fill room name!'}]}
+                    rules={[{required: true, message: 'Please input room ID!'},
+                        () => ({
+                            validator(rule, value) {
+                                return new Promise((resolve, reject) => {
+
+                                    api.get<RoomIsPrivateFlag>(`/rooms/is-private/`, {params: {room_id: value}}).then(response => {
+                                        if (response.status === 200) {
+                                            reject('Room with given id already exists!')
+                                        } else {
+                                            reject('Unknown server error!');
+                                        }
+                                    }).catch(({response}) => {
+                                        console.log(response.status)
+                                        if (response.status === 404) {
+                                            resolve('');
+                                        } else {
+                                            reject('Unknown server error!');
+                                        }
+                                    })
+                                })
+                            }
+                        }),]}
                 >
                     <Input/>
                 </Form.Item>
@@ -57,23 +91,19 @@ const CreateRoomForm = () => {
                 </Form.Item>
                 {
                     isPrivate && (
-                        <Form.Item name="checkbox-group" label="Choose allowed users:">
-                            <Checkbox.Group>
-                                <Flex vertical>
-                                    {
-                                        Object.entries(users).map(([id, name]) => (
-                                            <Checkbox key={id} value={id + name} style={{lineHeight: '32px'}}>
-                                                {name}
-                                            </Checkbox>
-                                        ))
-                                    }
-                                </Flex>
-                            </Checkbox.Group>
+                        <Form.Item<Fields>
+                            label="Room password"
+                            name="roomPassword"
+                            rules={[{required: true, message: 'Please fill room password!', min: 3}]}
+                        >
+                            <Input.Password/>
                         </Form.Item>
                     )
                 }
+
+
                 <Form.Item wrapperCol={{offset: 8, span: 16}}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={isLoading}>
                         Create
                     </Button>
                 </Form.Item>
