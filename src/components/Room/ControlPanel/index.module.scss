@@ -1,0 +1,11 @@
+.panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  bottom: 2rem;
+  border: .1rem solid rgba(255, 255, 255, .2);
+  backdrop-filter: blur(2rem);
+  padding: 1rem;
+  border-radius: 2rem;
+}
